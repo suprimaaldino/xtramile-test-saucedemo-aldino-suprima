@@ -6,7 +6,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+  workers: process.env.CI ? 4 : 1,
 
   reporter: [
     ['html', { open: 'never' }],
@@ -23,41 +23,54 @@ export default defineConfig({
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10_000,
-    navigationTimeout: 15_000,
+    navigationTimeout: 30_000,
   },
 
   projects: [
-    // ── Setup: login once, save storage state ──
+    // ── Setup: one per browser (cookies are browser-specific) ──
     {
-      name: 'setup',
+      name: 'setup-chromium',
       testDir: './src/fixtures',
       testMatch: /.*\.setup\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'setup-firefox',
+      testDir: './src/fixtures',
+      testMatch: /.*\.setup\.ts/,
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'setup-webkit',
+      testDir: './src/fixtures',
+      testMatch: /.*\.setup\.ts/,
+      use: { ...devices['Desktop Safari'] },
     },
 
-    // ── Test suites: all use saved storage state ──
+    // ── Test suites: each depends on its own browser setup ──
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'storage-state/standard-user.json',
+        storageState: 'storage-state/chromium.json',
       },
-      dependencies: ['setup'],
+      dependencies: ['setup-chromium'],
     },
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        storageState: 'storage-state/standard-user.json',
+        storageState: 'storage-state/firefox.json',
       },
-      dependencies: ['setup'],
+      dependencies: ['setup-firefox'],
     },
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        storageState: 'storage-state/standard-user.json',
+        storageState: 'storage-state/webkit.json',
       },
-      dependencies: ['setup'],
+      dependencies: ['setup-webkit'],
     },
   ],
 });

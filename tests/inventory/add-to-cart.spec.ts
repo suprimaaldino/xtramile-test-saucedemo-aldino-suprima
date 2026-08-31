@@ -3,8 +3,8 @@ import products from '../../test-data/products.json';
 
 test.describe('Add to Cart', () => {
   test.beforeEach(async ({ inventoryPage }) => {
-    // Storage state preserves session cookies, but we must navigate to the page
     await inventoryPage.navigateTo('/inventory.html');
+    await inventoryPage.expectInventoryLoaded();
   });
 
   test('should add single item to cart and show badge', async ({ inventoryPage }) => {

@@ -4,6 +4,7 @@ import products from '../../test-data/products.json';
 test.describe('Cart Validation', () => {
   test.beforeEach(async ({ inventoryPage }) => {
     await inventoryPage.navigateTo('/inventory.html');
+    await inventoryPage.expectInventoryLoaded();
   });
 
   test('should show correct items in cart after adding', async ({ inventoryPage, cartPage }) => {
