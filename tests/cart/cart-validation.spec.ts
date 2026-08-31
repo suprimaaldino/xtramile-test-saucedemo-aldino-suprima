@@ -7,7 +7,7 @@ test.describe('Cart Validation', () => {
     await inventoryPage.expectInventoryLoaded();
   });
 
-  test('should show correct items in cart after adding', async ({ inventoryPage, cartPage }) => {
+  test('TC-07: should show correct items in cart with price and quantity', async ({ inventoryPage, cartPage }) => {
     // Arrange — add specific items
     const itemsToAdd = [products[0], products[2]];
     for (const item of itemsToAdd) {

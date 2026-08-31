@@ -35,4 +35,19 @@ test.describe('Sort Products', () => {
     expect(names[0]).toBe('Test.allTheThings() T-Shirt (Red)');
     expect(names[names.length - 1]).toBe('Sauce Labs Backpack');
   });
+
+  test('TC-14: should sort products by Price (high to low)', async ({ inventoryPage }) => {
+    // Act
+    await inventoryPage.sortBy('hilo');
+
+    // Assert — prices should be in descending order
+    const prices = await inventoryPage.getProductPrices();
+    const numericPrices = prices.map((p) => parseFloat(p.replace('$', '')));
+    const sorted = [...numericPrices].sort((a, b) => b - a);
+    expect(numericPrices).toEqual(sorted);
+
+    // Verify most expensive first, cheapest last
+    expect(numericPrices[0]).toBe(49.99);  // Sauce Labs Fleece Jacket
+    expect(numericPrices[numericPrices.length - 1]).toBe(7.99); // Sauce Labs Onesie
+  });
 });

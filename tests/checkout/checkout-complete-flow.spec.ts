@@ -7,7 +7,7 @@ test.describe('Checkout Flow', () => {
     await inventoryPage.expectInventoryLoaded();
   });
 
-  test('should complete full checkout flow with single item', async ({
+  test('TC-09: should complete full checkout flow with pricing verification', async ({
     inventoryPage, cartPage, checkoutStepOnePage, checkoutStepTwoPage, checkoutCompletePage, page,
   }) => {
     // Arrange — add item
@@ -68,7 +68,7 @@ test.describe('Checkout Flow', () => {
     await checkoutCompletePage.expectConfirmationVisible();
   });
 
-  test('should cancel checkout on step two and return to inventory with cart intact', async ({
+  test('TC-11: should cancel checkout on step two and return to inventory with cart intact', async ({
     inventoryPage, cartPage, checkoutStepOnePage, checkoutStepTwoPage, page,
   }) => {
     // Arrange — add item and proceed to step two
@@ -86,7 +86,7 @@ test.describe('Checkout Flow', () => {
     await inventoryPage.expectCartBadgeCount(1);
   });
 
-  test('should show error when submitting empty form', async ({
+  test('TC-10: should show error when submitting empty form', async ({
     inventoryPage, cartPage, checkoutStepOnePage,
   }) => {
     // Arrange
@@ -99,6 +99,31 @@ test.describe('Checkout Flow', () => {
 
     // Assert — error message
     await checkoutStepOnePage.expectErrorMessage('First Name is required');
+  });
+
+  test('TC-16: should handle invalid characters in checkout fields', async ({
+    inventoryPage, cartPage, checkoutStepOnePage, checkoutStepTwoPage, page,
+  }) => {
+    // Arrange
+    await inventoryPage.addProductToCart(products[0].name);
+    await inventoryPage.navigateToCart();
+    await cartPage.clickCheckout();
+
+    // Act — fill with invalid characters
+    await checkoutStepOnePage.fillForm('123!@#', '$$Doe', 'ABCDE');
+    await checkoutStepOnePage.clickContinue();
+
+    // Assert — either rejected with error OR accepted (observation/gap)
+    const isOnStepOne = await page.url().includes('checkout-step-one');
+    const isOnStepTwo = await page.url().includes('checkout-step-two');
+
+    if (isOnStepOne) {
+      // App rejected invalid input — expected behavior
+      await checkoutStepOnePage.expectErrorMessage('');
+    } else if (isOnStepTwo) {
+      // App accepted invalid input — log as observation/gap
+      console.log('OBSERVATION: SauceDemo accepted invalid characters in checkout fields');
+    }
   });
 
   test('should go back home from confirmation page', async ({

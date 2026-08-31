@@ -37,6 +37,10 @@ export const env = {
     username: process.env.SAUCE_INVALID_USER || '',
     password: decodePassword(process.env.SAUCE_INVALID_PASS),
   },
+  problemUser: {
+    username: process.env.SAUCE_PROBLEM_USER || '',
+    password: decodePassword(process.env.SAUCE_PROBLEM_PASS),
+  },
 } as const;
 
 // ── Validate credentials are available ──
@@ -44,6 +48,7 @@ const missing = [
   'SAUCE_STANDARD_USER', 'SAUCE_STANDARD_PASS',
   'SAUCE_LOCKED_OUT_USER', 'SAUCE_LOCKED_OUT_PASS',
   'SAUCE_INVALID_USER', 'SAUCE_INVALID_PASS',
+  'SAUCE_PROBLEM_USER', 'SAUCE_PROBLEM_PASS',
 ].filter((key) => !process.env[key]);
 
 if (missing.length > 0) {
