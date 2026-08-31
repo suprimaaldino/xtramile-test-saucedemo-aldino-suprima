@@ -10,6 +10,11 @@ export class InventoryPage extends BasePage {
   private readonly inventoryList = this.page.locator('.inventory_list');
   private readonly cartBadge = this.page.locator('.shopping_cart_badge');
   private readonly cartLink = this.page.locator('[data-test="shopping-cart-link"]');
+  private readonly sortDropdown = this.page.locator('[data-test="product-sort-container"]');
+  private readonly productPrices = this.page.locator('.inventory_item_price');
+  private readonly pageTitle = this.page.locator('.title');
+  private readonly burgerMenu = this.page.locator('#react-burger-menu-btn');
+  private readonly cartIcon = this.page.locator('[data-test="shopping-cart-link"]');
 
   // ── Assertions (auto-wait + retry) ──
 
@@ -18,6 +23,16 @@ export class InventoryPage extends BasePage {
   }
 
   // ── Actions ──
+
+  async sortBy(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
+    await this.allureStep(`Sort by "${option}"`, async () => {
+      await this.sortDropdown.selectOption(option);
+    });
+  }
+
+  async getProductPrices(): Promise<string[]> {
+    return this.productPrices.allTextContents();
+  }
 
   async addProductToCart(productName: string): Promise<void> {
     await this.allureStep(`Add "${productName}" to cart`, async () => {
@@ -85,6 +100,31 @@ export class InventoryPage extends BasePage {
       : `remove-${this.slugify(productName)}`;
     await this.allureStep(`Verify "${productName}" button is "${state}"`, async () => {
       await expect(this.page.locator(`[data-test="${dataTest}"]`)).toBeVisible();
+    });
+  }
+
+  async expectPageTitle(expected: string): Promise<void> {
+    await this.allureStep(`Verify page title is "${expected}"`, async () => {
+      await expect(this.pageTitle).toHaveText(expected);
+    });
+  }
+
+  async expectBurgerMenuVisible(): Promise<void> {
+    await this.allureStep('Verify burger menu is visible', async () => {
+      await expect(this.burgerMenu).toBeVisible();
+    });
+  }
+
+  async expectCartIconVisible(): Promise<void> {
+    await this.allureStep('Verify cart icon is visible', async () => {
+      await expect(this.cartIcon).toBeVisible();
+    });
+  }
+
+  async expectSortOrder(expected: string[]): Promise<void> {
+    await this.allureStep(`Verify sort order matches expected`, async () => {
+      const actual = await this.getAllProductNames();
+      expect(actual).toEqual(expected);
     });
   }
 }
