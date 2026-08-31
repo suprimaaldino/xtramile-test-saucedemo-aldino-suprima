@@ -13,7 +13,7 @@
     "test:cart": "playwright test tests/cart/",
     "test:checkout": "playwright test tests/checkout/",
     "test:logout": "playwright test tests/logout/",
-    "test:setup": "playwright test --project=setup",
+    "test:setup": "playwright test --project=setup-chromium --project=setup-firefox --project=setup-webkit",
     "test:chromium": "playwright test --project=chromium",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
