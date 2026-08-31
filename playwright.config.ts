@@ -30,6 +30,7 @@ export default defineConfig({
     // ── Setup: login once, save storage state ──
     {
       name: 'setup',
+      testDir: './src/fixtures',
       testMatch: /.*\.setup\.ts/,
     },
 
