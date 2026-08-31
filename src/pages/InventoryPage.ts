@@ -54,6 +54,13 @@ export class InventoryPage extends BasePage {
     });
   }
 
+  async openProductDetail(productName: string): Promise<void> {
+    await this.allureStep(`Open detail page for "${productName}"`, async () => {
+      const link = this.page.locator('.inventory_item_name').filter({ hasText: productName });
+      await link.click();
+    });
+  }
+
   // ── Getters ──
 
   async getCartBadgeCount(): Promise<number> {

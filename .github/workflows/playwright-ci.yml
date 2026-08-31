@@ -27,6 +27,8 @@ jobs:
       SAUCE_LOCKED_OUT_PASS: ${{ secrets.SAUCE_LOCKED_OUT_PASS }}
       SAUCE_INVALID_USER: ${{ secrets.SAUCE_INVALID_USER }}
       SAUCE_INVALID_PASS: ${{ secrets.SAUCE_INVALID_PASS }}
+      SAUCE_PROBLEM_USER: ${{ secrets.SAUCE_PROBLEM_USER }}
+      SAUCE_PROBLEM_PASS: ${{ secrets.SAUCE_PROBLEM_PASS }}
       BASE_URL: https://www.saucedemo.com
 
     steps:

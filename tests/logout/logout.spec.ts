@@ -9,7 +9,7 @@ test.describe('Logout', () => {
     await expect(loginPage.getPage()).toHaveURL(/.*inventory\.html/);
   });
 
-  test('should logout successfully and redirect to login page', async ({ header, page }) => {
+  test('TC-12: should logout successfully and redirect to login page', async ({ header, page }) => {
     // Act
     await header.logout();
 
@@ -18,7 +18,7 @@ test.describe('Logout', () => {
     await expect(page.locator('[data-test="login-button"]')).toBeVisible();
   });
 
-  test('should not access inventory page after logout via browser Back', async ({ header, page }) => {
+  test('TC-13: should not access inventory page after logout via browser Back', async ({ header, page }) => {
     // Act — logout
     await header.logout();
 

@@ -6,7 +6,7 @@ test.describe('Login', () => {
     await loginPage.navigate();
   });
 
-  test('should login successfully with valid credentials', async ({ loginPage, inventoryPage, page }) => {
+  test('TC-01: should login successfully with valid credentials', async ({ loginPage, inventoryPage, page }) => {
     // Arrange & Act
     await loginPage.login(env.standardUser.username, env.standardUser.password);
 
@@ -17,7 +17,7 @@ test.describe('Login', () => {
     await inventoryPage.expectCartIconVisible();
   });
 
-  test('should show error with invalid password', async ({ loginPage }) => {
+  test('TC-03: should show error with invalid password', async ({ loginPage }) => {
     // Arrange & Act
     await loginPage.login(env.invalidUser.username, env.invalidUser.password);
 
@@ -25,7 +25,7 @@ test.describe('Login', () => {
     await loginPage.expectErrorMessage('Username and password do not match any user in this service');
   });
 
-  test('should show error with locked out user', async ({ loginPage }) => {
+  test('TC-02: should show error with locked out user', async ({ loginPage }) => {
     // Arrange & Act
     await loginPage.login(env.lockedOutUser.username, env.lockedOutUser.password);
 
@@ -33,7 +33,7 @@ test.describe('Login', () => {
     await loginPage.expectErrorMessage('Sorry, this user has been locked out.');
   });
 
-  test('should show error with empty credentials', async ({ loginPage }) => {
+  test('TC-04: should show error with empty credentials', async ({ loginPage }) => {
     // Arrange & Act
     await loginPage.login('', '');
 

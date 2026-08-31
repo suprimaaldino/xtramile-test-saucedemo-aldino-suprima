@@ -7,7 +7,7 @@ test.describe('Remove from Cart', () => {
     await inventoryPage.expectInventoryLoaded();
   });
 
-  test('should remove item from cart and badge disappears', async ({ inventoryPage, cartPage }) => {
+  test('TC-15: should remove last item and badge disappears', async ({ inventoryPage, cartPage }) => {
     // Arrange — add item first
     const product = products[0];
     await inventoryPage.addProductToCart(product.name);
@@ -21,7 +21,7 @@ test.describe('Remove from Cart', () => {
     await cartPage.expectCartEmpty();
   });
 
-  test('should remove one item, keep others in cart', async ({ inventoryPage, cartPage }) => {
+  test('TC-08b: should remove one item, keep others in cart', async ({ inventoryPage, cartPage }) => {
     // Arrange — add 2 items
     await inventoryPage.addProductToCart(products[0].name);
     await inventoryPage.addProductToCart(products[1].name);
