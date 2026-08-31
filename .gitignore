@@ -1,6 +1,7 @@
 node_modules/
 test-results/
 playwright-report/
+allure-results/
 reports/allure-results/
 reports/allure-report/
 storage-state/*.json
@@ -8,3 +9,4 @@ storage-state/*.json
 .env
 .env.local
 .env.*.local
+allure-results/
