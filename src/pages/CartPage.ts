@@ -75,4 +75,23 @@ export class CartPage extends BasePage {
       await expect(this.cartItems).toHaveCount(expected);
     });
   }
+
+  async expectCartItemDetail(productName: string, expectedPrice: string): Promise<void> {
+    await this.allureStep(`Verify "${productName}" with price "${expectedPrice}" in cart`, async () => {
+      const item = this.page.locator('.cart_item').filter({ hasText: productName });
+      await expect(item).toBeVisible();
+      await expect(item.locator('.inventory_item_price')).toHaveText(expectedPrice);
+      await expect(item.locator('.cart_quantity')).toHaveText('1');
+    });
+  }
+
+  async expectCartBadgeCount(expected: number): Promise<void> {
+    await this.allureStep(`Verify cart badge shows ${expected}`, async () => {
+      if (expected === 0) {
+        await expect(this.cartBadge).not.toBeVisible();
+      } else {
+        await expect(this.cartBadge).toHaveText(String(expected));
+      }
+    });
+  }
 }

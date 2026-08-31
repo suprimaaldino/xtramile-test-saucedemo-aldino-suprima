@@ -11,6 +11,8 @@ export class CheckoutStepTwoPage extends BasePage {
   private readonly cancelButton = this.page.locator('[data-test="cancel"]');
   private readonly cartItems = this.page.locator('.cart_item');
   private readonly totalPrice = this.page.locator('.summary_total_label');
+  private readonly itemSubtotal = this.page.locator('.summary_subtotal_label');
+  private readonly itemTax = this.page.locator('.summary_tax_label');
   private readonly itemPrices = this.page.locator('.inventory_item_price');
 
   // ── Actions ──
@@ -31,6 +33,16 @@ export class CheckoutStepTwoPage extends BasePage {
 
   async getOrderItemCount(): Promise<number> {
     return this.cartItems.count();
+  }
+
+  async getSubtotal(): Promise<string> {
+    const text = await this.itemSubtotal.textContent();
+    return text?.replace('Item total: ', '') ?? '';
+  }
+
+  async getTax(): Promise<string> {
+    const text = await this.itemTax.textContent();
+    return text?.replace('Tax: ', '') ?? '';
   }
 
   async getTotalPrice(): Promise<string> {
@@ -58,6 +70,14 @@ export class CheckoutStepTwoPage extends BasePage {
   async expectItemCount(expected: number): Promise<void> {
     await this.allureStep(`Verify order has ${expected} items`, async () => {
       await expect(this.cartItems).toHaveCount(expected);
+    });
+  }
+
+  async expectPricing(expectedSubtotal: string, expectedTax: string, expectedTotal: string): Promise<void> {
+    await this.allureStep(`Verify pricing: subtotal=${expectedSubtotal}, tax=${expectedTax}, total=${expectedTotal}`, async () => {
+      await expect(this.itemSubtotal).toContainText(expectedSubtotal);
+      await expect(this.itemTax).toContainText(expectedTax);
+      await expect(this.totalPrice).toContainText(expectedTotal);
     });
   }
 }

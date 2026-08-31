@@ -18,13 +18,17 @@ test.describe('Logout', () => {
     await expect(page.locator('[data-test="login-button"]')).toBeVisible();
   });
 
-  test('should not access inventory page after logout', async ({ header, page }) => {
+  test('should not access inventory page after logout via browser Back', async ({ header, page }) => {
     // Act — logout
     await header.logout();
 
-    // Assert — try to access inventory directly, should redirect back to login
-    await page.goto('/inventory.html');
-    await expect(page).toHaveURL(/.*$/);
+    // Assert — on login page
+    await expect(page.locator('[data-test="login-button"]')).toBeVisible();
+
+    // Act — use browser Back button
+    await page.goBack();
+
+    // Assert — should redirect back to login (session destroyed)
     await expect(page.locator('[data-test="login-button"]')).toBeVisible();
   });
 });

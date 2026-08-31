@@ -27,6 +27,16 @@ test.describe('Checkout Flow', () => {
     // Act — checkout step two
     await checkoutStepTwoPage.expectOrderSummaryVisible();
     await checkoutStepTwoPage.expectItemCount(1);
+
+    // Assert — verify pricing (subtotal, tax, total)
+    const subtotal = await checkoutStepTwoPage.getSubtotal();
+    const tax = await checkoutStepTwoPage.getTax();
+    const total = await checkoutStepTwoPage.getTotalPrice();
+    expect(subtotal).toBe(product.price);
+    expect(tax).toBeTruthy();
+    expect(total).toBeTruthy();
+
+    // Act — finish
     await checkoutStepTwoPage.clickFinish();
 
     // Assert — confirmation
@@ -58,19 +68,22 @@ test.describe('Checkout Flow', () => {
     await checkoutCompletePage.expectConfirmationVisible();
   });
 
-  test('should cancel checkout and return to inventory', async ({
-    inventoryPage, cartPage, checkoutStepOnePage, page,
+  test('should cancel checkout on step two and return to inventory with cart intact', async ({
+    inventoryPage, cartPage, checkoutStepOnePage, checkoutStepTwoPage, page,
   }) => {
-    // Arrange
+    // Arrange — add item and proceed to step two
     await inventoryPage.addProductToCart(products[0].name);
     await inventoryPage.navigateToCart();
     await cartPage.clickCheckout();
+    await checkoutStepOnePage.fillForm('John', 'Doe', '10001');
+    await checkoutStepOnePage.clickContinue();
 
-    // Act — cancel on step one
-    await checkoutStepOnePage.clickCancel();
+    // Act — cancel on step two (Overview)
+    await checkoutStepTwoPage.clickCancel();
 
-    // Assert — back on cart
-    await expect(page).toHaveURL(/.*cart\.html/);
+    // Assert — back on inventory, cart still has 1 item
+    await expect(page).toHaveURL(/.*inventory\.html/);
+    await inventoryPage.expectCartBadgeCount(1);
   });
 
   test('should show error when submitting empty form', async ({

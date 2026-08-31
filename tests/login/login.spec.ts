@@ -6,12 +6,15 @@ test.describe('Login', () => {
     await loginPage.navigate();
   });
 
-  test('should login successfully with valid credentials', async ({ loginPage, page }) => {
+  test('should login successfully with valid credentials', async ({ loginPage, inventoryPage, page }) => {
     // Arrange & Act
     await loginPage.login(env.standardUser.username, env.standardUser.password);
 
-    // Assert
+    // Assert — redirected to inventory page
     await expect(page).toHaveURL(/.*inventory\.html/);
+    await inventoryPage.expectPageTitle('Products');
+    await inventoryPage.expectBurgerMenuVisible();
+    await inventoryPage.expectCartIconVisible();
   });
 
   test('should show error with invalid password', async ({ loginPage }) => {

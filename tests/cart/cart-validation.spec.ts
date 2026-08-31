@@ -17,10 +17,10 @@ test.describe('Cart Validation', () => {
     // Act — go to cart
     await inventoryPage.navigateToCart();
 
-    // Assert — cart shows correct items
+    // Assert — cart shows correct items with prices and quantity
     await cartPage.expectCartItemCount(itemsToAdd.length);
     for (const item of itemsToAdd) {
-      await cartPage.expectCartItemVisible(item.name);
+      await cartPage.expectCartItemDetail(item.name, item.price);
     }
   });
 
