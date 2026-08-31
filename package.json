@@ -1,0 +1,34 @@
+{
+  "name": "saucedemo-playwright",
+  "version": "1.0.0",
+  "description": "Playwright E2E automation for SauceDemo — POM pattern, storage state, Allure reporting",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:login": "playwright test tests/login/",
+    "test:inventory": "playwright test tests/inventory/",
+    "test:cart": "playwright test tests/cart/",
+    "test:checkout": "playwright test tests/checkout/",
+    "test:logout": "playwright test tests/logout/",
+    "test:setup": "playwright test --project=setup",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "allure:generate": "allure generate reports/allure-results -o reports/allure-report --clean",
+    "allure:open": "allure open reports/allure-report",
+    "allure:serve": "allure serve reports/allure-results"
+  },
+  "keywords": ["playwright", "saucedemo", "e2e", "automation"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.0",
+    "allure-playwright": "^3.11.0",
+    "dotenv": "^17.4.2",
+    "typescript": "^7.0.2"
+  }
+}

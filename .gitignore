@@ -1,0 +1,10 @@
+node_modules/
+test-results/
+playwright-report/
+reports/allure-results/
+reports/allure-report/
+storage-state/*.json
+!.gitkeep
+.env
+.env.local
+.env.*.local
