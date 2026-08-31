@@ -6,7 +6,7 @@ test.describe('Logout', () => {
     // Reuse existing login flow — login first, then test logout
     await loginPage.navigate();
     await loginPage.login(env.standardUser.username, env.standardUser.password);
-    await expect(loginPage['page']).toHaveURL(/.*inventory\.html/);
+    await expect(loginPage.getPage()).toHaveURL(/.*inventory\.html/);
   });
 
   test('should logout successfully and redirect to login page', async ({ header, page }) => {

@@ -9,4 +9,3 @@ storage-state/*.json
 .env
 .env.local
 .env.*.local
-allure-results/

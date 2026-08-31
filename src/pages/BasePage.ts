@@ -22,6 +22,11 @@ export class BasePage {
     await this.page.goto(path);
   }
 
+  /** Public access to page for assertions outside POM */
+  getPage(): Page {
+    return this.page;
+  }
+
   /** Get current page URL */
   async getCurrentUrl(): Promise<string> {
     return this.page.url();
