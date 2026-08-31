@@ -1,0 +1,46 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests (Shard ${{ matrix.shard }}/4)
+        run: npx playwright test --shard=${{ matrix.shard }}/4
+        env:
+          CI: true
+          SAUCE_STANDARD_USER: ${{ secrets.SAUCE_STANDARD_USER }}
+          SAUCE_STANDARD_PASS: ${{ secrets.SAUCE_STANDARD_PASS }}
+          SAUCE_LOCKED_OUT_USER: ${{ secrets.SAUCE_LOCKED_OUT_USER }}
+          SAUCE_LOCKED_OUT_PASS: ${{ secrets.SAUCE_LOCKED_OUT_PASS }}
+          SAUCE_INVALID_USER: ${{ secrets.SAUCE_INVALID_USER }}
+          SAUCE_INVALID_PASS: ${{ secrets.SAUCE_INVALID_PASS }}
+          BASE_URL: https://www.saucedemo.com
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.shard }}
+          path: reports/allure-results/
+          retention-days: 30
