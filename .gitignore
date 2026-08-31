@@ -5,7 +5,7 @@ allure-results/
 reports/allure-results/
 reports/allure-report/
 storage-state/*.json
-!.gitkeep
+!storage-state/.gitkeep
 .env
 .env.local
 .env.*.local

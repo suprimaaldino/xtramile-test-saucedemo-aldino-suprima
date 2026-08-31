@@ -4,6 +4,7 @@ import products from '../../test-data/products.json';
 test.describe('Remove from Cart', () => {
   test.beforeEach(async ({ inventoryPage }) => {
     await inventoryPage.navigateTo('/inventory.html');
+    await inventoryPage.expectInventoryLoaded();
   });
 
   test('should remove item from cart and badge disappears', async ({ inventoryPage, cartPage }) => {

@@ -4,12 +4,14 @@ import * as path from 'path';
 import { env } from '../helpers/env';
 
 const STORAGE_DIR = path.resolve(__dirname, '../../storage-state');
-const STORAGE_FILE = path.join(STORAGE_DIR, 'standard-user.json');
 
 setup('authenticate as standard user', async ({ page }) => {
-  // Ensure directory exists — critical for fresh git clones where
-  // storage-state/ only has .gitkeep (or may be empty)
+  // Ensure directory exists
   fs.mkdirSync(STORAGE_DIR, { recursive: true });
+
+  // Determine browser from project name (setup-chromium → chromium)
+  const browser = setup.info().project.name.replace('setup-', '');
+  const storageFile = path.join(STORAGE_DIR, `${browser}.json`);
 
   await page.goto(env.baseUrl);
   await page.locator('#user-name').fill(env.standardUser.username);
@@ -17,6 +19,6 @@ setup('authenticate as standard user', async ({ page }) => {
   await page.locator('#login-button').click();
   await page.waitForURL('**/inventory.html');
 
-  // Save storage state — reused by ALL subsequent browser projects
-  await page.context().storageState({ path: STORAGE_FILE });
+  // Save browser-specific storage state
+  await page.context().storageState({ path: storageFile });
 });

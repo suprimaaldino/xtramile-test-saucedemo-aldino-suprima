@@ -11,19 +11,25 @@ export class InventoryPage extends BasePage {
   private readonly cartBadge = this.page.locator('.shopping_cart_badge');
   private readonly cartLink = this.page.locator('[data-test="shopping-cart-link"]');
 
+  // ── Assertions (auto-wait + retry) ──
+
+  async expectInventoryLoaded(): Promise<void> {
+    await expect(this.inventoryList).toBeVisible();
+  }
+
   // ── Actions ──
 
   async addProductToCart(productName: string): Promise<void> {
     await this.allureStep(`Add "${productName}" to cart`, async () => {
       const button = this.page.locator(`[data-test="add-to-cart-${this.slugify(productName)}"]`);
-      await button.click();
+      await button.click();  // Playwright auto-waits for visible + enabled
     });
   }
 
   async removeProductFromCart(productName: string): Promise<void> {
     await this.allureStep(`Remove "${productName}" from cart`, async () => {
       const button = this.page.locator(`[data-test="remove-${this.slugify(productName)}"]`);
-      await button.click();
+      await button.click();  // Playwright auto-waits for visible + enabled
     });
   }
 
