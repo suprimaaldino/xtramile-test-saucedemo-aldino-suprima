@@ -101,7 +101,7 @@ No Playwright browsers need to be pre-installed — `npx playwright install` han
 │   ├── login/
 │   │   └── login.spec.ts            # TC-01 to TC-04
 │   ├── inventory/
-│   │   ├── add-to-cart.spec.ts      # TC-17, TC-18, TC-19, TC-20
+│   │   ├── add-to-cart.spec.ts      # TC-17, TC-19, TC-20
 │   │   ├── remove-from-cart.spec.ts # TC-08, TC-15
 │   │   └── sort-products.spec.ts    # TC-05, TC-06, TC-14
 │   ├── cart/
@@ -262,11 +262,10 @@ Values can be plaintext or Base64-encoded — both work.
 | TC-15 | Cart | Cart badge disappears once cart goes back to empty | Low |
 | TC-16 | Checkout | Invalid characters in checkout fields (observation) | Medium |
 | TC-17 | Product Listing | Add item to cart from product detail page | Medium |
-| TC-18 | Cart | Add to cart as problem_user (regression check) | High |
 | TC-19 | Cart | Single item badge shows 1 | Medium |
 | TC-20 | Product Listing | Verify all 6 products displayed, no pagination | Low |
 
-**Total: 20 test cases × 3 browsers = 60 test runs + 27 supplementary tests = 87 total**
+**Total: 19 test cases × 3 browsers = 57 test runs + 27 supplementary tests = 84 total**
 
 ---
 
