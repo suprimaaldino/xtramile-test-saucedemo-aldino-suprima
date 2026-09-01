@@ -8,7 +8,7 @@ E2E test automation for [SauceDemo](https://www.saucedemo.com) using Playwright 
 | Framework | Playwright + TypeScript |
 | Pattern | Page Object Model (POM) + Custom Fixtures |
 | Reporting | Allure Report + GitHub Pages |
-| CI/CD | GitHub Actions (parallel sharding + Allure publish) |
+| CI/CD | GitHub Actions (2 parallel shards × 2 workers, Allure publish) |
 | Auth Strategy | Playwright Storage State (login once, reuse across all tests) |
 | Secrets | `.env` + Base64 encoding — passwords encoded, decoded at runtime |
 
@@ -265,7 +265,16 @@ Values can be plaintext or Base64-encoded — both work.
 | TC-19 | Cart | Single item badge shows 1 | Medium |
 | TC-20 | Product Listing | Verify all 6 products displayed, no pagination | Low |
 
-**Total: 19 test cases × 3 browsers = 57 test runs + 27 supplementary tests = 84 total**
+**Total: 84 test executions**
+
+| Breakdown | Count |
+|-----------|-------|
+| 19 functional TCs × 3 browsers | 57 |
+| 8 supplementary tests × 3 browsers (data-driven + edge cases) | 24 |
+| 3 browser setup (auth state generation) | 3 |
+| **Total** | **84** |
+
+> **Supplementary tests** include: data-driven checkout with 3 customer profiles, multiple-item cart flow, add-to-remove button toggle, continue-shopping flow, and multi-item checkout — extra scenarios beyond the 19 numbered TCs.
 
 ---
 
@@ -343,13 +352,32 @@ Push/PR to main
        ↓
   npm ci (install deps)
        ↓
-  Run Playwright Tests (2 shards × 4 workers)
+  Run Playwright Tests (2 parallel shards × 2 workers = up to 4 concurrent)
        ↓
   Upload Allure artifacts (per shard)
 ```
 
+```
+                    GitHub Actions
+                          │
+                  ┌───────┴───────┐
+                  │               │
+               Shard 1         Shard 2
+                  │               │
+              2 workers        2 workers
+                  │               │
+                  └───────┬───────┘
+                          │
+               Up to 4 concurrent workers
+                          │
+                 ┌────────┼────────┐
+                 ↓        ↓        ↓
+             Chromium  Firefox   WebKit
+```
+
 - **Docker image:** `mcr.microsoft.com/playwright:v1.62.1-noble`
 - **Shards:** 2 parallel jobs for faster execution
+- **Workers:** 2 per shard (up to 4 concurrent across both shards)
 - **Retries:** 2 retries in CI (0 locally)
 - **Env vars:** Injected from GitHub Secrets
 
@@ -363,6 +391,18 @@ Playwright Tests complete
   Generate Allure HTML report
        ↓
   Deploy to GitHub Pages
+```
+
+```
+Failure Artifacts (auto-captured per test):
+   ↓
+Screenshot → Trace → Video
+   ↓
+Allure Results (allure-results/)
+   ↓
+Merge shards → Generate HTML report
+   ↓
+GitHub Pages (public URL)
 ```
 
 **Report URL:** `https://suprimaaldino.github.io/xtramile-test-saucedemo-aldino-suprima/`
@@ -383,13 +423,13 @@ Playwright Tests complete
 npx playwright test
 
 # Generate report
-npx allure generate reports/allure-results -o reports/allure-report --clean
+npx allure generate allure-results -o allure-report --clean
 
 # Open report
-npx allure open reports/allure-report
+npx allure open allure-report
 
 # Or serve directly (auto-opens browser)
-npx allure serve reports/allure-results
+npx allure serve allure-results
 ```
 
 ### Report Features
